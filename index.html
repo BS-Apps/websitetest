@@ -1,10 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My First GitHub Page</title>
+  <meta charset="UTF-8" />
+  <title>Home - My Website</title>
+  <style>
+    /* Simple styles for layout */
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    nav a { margin-right: 15px; }
+  </style>
 </head>
 <body>
-  <h1>Hello World!!!</h1>
-  <p>This is a test page hosted with GitHub Pages.</p>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="how-to-install.html">How to Install</a>
+    <a href="download.html">Download</a>
+    <button id="loginBtn">Sign Up / Login</button>
+  </nav>
+
+  <h1>Welcome to My Website</h1>
+  <p>This is the home page.</p>
+
+  <!-- Signup/Login Modal will go here -->
+
+  <div id="loginModal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+      background:#f1f1f1; padding:20px; border:1px solid #ccc; width:300px;">
+    <h2>Sign Up / Login</h2>
+    <form id="loginForm">
+      <label>Email:<br />
+        <input type="email" id="email" required />
+      </label><br /><br />
+      <label>Password:<br />
+        <input type="password" id="password" required />
+      </label><br /><br />
+      <button type="submit">Submit</button>
+      <button type="button" id="closeModal">Close</button>
+    </form>
+    <div id="message" style="color:red; margin-top:10px;"></div>
+  </div>
+
+  <script>
+    // Show modal
+    document.getElementById('loginBtn').onclick = function() {
+      document.getElementById('loginModal').style.display = 'block';
+      document.getElementById('message').textContent = '';
+    };
+
+    // Close modal
+    document.getElementById('closeModal').onclick = function() {
+      document.getElementById('loginModal').style.display = 'none';
+    };
+
+    // Handle form submit
+    document.getElementById('loginForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      // Call your Backendless API here to save user (we'll add this later)
+      document.getElementById('message').textContent = 'Processing...';
+
+      try {
+        // Example API call (fill in your real URL and details below)
+        const response = await fetch('https://api.backendless.com/YOUR-APP-ID/YOUR-API-KEY/data/Purchases', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+        if (response.ok) {
+          document.getElementById('message').style.color = 'green';
+          document.getElementById('message').textContent = 'User registered successfully!';
+        } else {
+          const errorData = await response.json();
+          document.getElementById('message').textContent = 'Error: ' + (errorData.message || 'Unknown error');
+        }
+      } catch (err) {
+        document.getElementById('message').textContent = 'Network error: ' + err.message;
+      }
+    };
+  </script>
 </body>
 </html>
